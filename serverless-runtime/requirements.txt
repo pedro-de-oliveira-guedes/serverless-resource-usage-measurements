@@ -3,5 +3,5 @@ numpy
 pandas
 redis
 requests
-sklearn
+scikit-learn
 tqdm
