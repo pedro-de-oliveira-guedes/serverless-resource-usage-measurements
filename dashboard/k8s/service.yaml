@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: pedroguedes-usage-dashboard-service
+  name: pedroguedes-monitoring-dashboard-service
   namespace: pedroguedes
 spec:
   type: NodePort
   selector:
-    app: pedroguedes-usage-dashboard
+    app: pedroguedes-monitoring-dashboard
   ports:
     - protocol: TCP
       port: 52055

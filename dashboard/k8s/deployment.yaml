@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: pedroguedes-usage-dashboard-deployment
+  name: pedroguedes-monitoring-dashboard-deployment
   namespace: pedroguedes
   labels:
-    app: pedroguedes-usage-dashboard
+    app: pedroguedes-monitoring-dashboard
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: pedroguedes-usage-dashboard
+      app: pedroguedes-monitoring-dashboard
   template:
     metadata:
       labels:
-        app: pedroguedes-usage-dashboard
+        app: pedroguedes-monitoring-dashboard
     spec:
       containers:
-      - name: pedroguedes-usage-dashboard
-        image: pedroguedes/usage-dashboard:latest
+      - name: pedroguedes-monitoring-dashboard
+        image: pedroufmg/monitoring-dashboard:latest
         ports:
         - containerPort: 52055
       imagePullSecrets:
