@@ -1,4 +1,4 @@
-FROM python:3.9-slim
+FROM python:3.9-slim-bullseye
 
 # Install dependencies
 RUN apt-get update && apt-get install -y unzip && rm -rf /var/lib/apt/lists/*
@@ -8,6 +8,9 @@ COPY context.py /app/context.py
 COPY runtime.py /app/runtime.py
 COPY requirements.txt /app/requirements.txt
 COPY entrypoint.sh /app/entrypoint.sh
+
+# Ensure the entrypoint script has executable permissions
+RUN chmod +x /app/entrypoint.sh
 
 WORKDIR /app
 
