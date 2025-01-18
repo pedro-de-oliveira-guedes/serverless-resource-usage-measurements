@@ -2,41 +2,59 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: serverless-redis
+  name: serverless-runtime
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: serverless-redis
+      app: serverless-runtime
   template:
     metadata:
       labels:
-        app: serverless-redis
+        app: serverless-runtime
     spec:
       containers:
-      - name: serverless-redis
-        image: lucasmsp/serverless:redis
+      - name: serverless-runtime
+        image: pedroufmg/serverless-runtime:latest
         imagePullPolicy: Always
-        resources:
-          requests:
-            cpu: 100m
-            memory: 300Mi
-        volumeMounts:
-        - name: pyfile
-          mountPath: "/opt/usermodule.py"
-          subPath: pyfile
         env:
         - name: REDIS_HOST
           value: "192.168.121.187"
         - name: REDIS_PORT
           value: "6379"
         - name: REDIS_INPUT_KEY
-          value: "metrics"
+          valueFrom:
+            configMapKeyRef:
+              name: runtime-config
+              key: REDIS_INPUT_KEY
         - name: REDIS_OUTPUT_KEY
           valueFrom:
             configMapKeyRef:
-              name: outputkey
+              name: runtime-config
               key: REDIS_OUTPUT_KEY
+        - name: MONITORING_INTERVAL
+          valueFrom:
+            configMapKeyRef:
+              name: runtime-config
+              key: MONITORING_INTERVAL
+        - name: ZIP_FILE_PATH
+          valueFrom:
+            configMapKeyRef:
+              name: runtime-config
+              key: ZIP_FILE_PATH
+        - name: FUNCTION_HANDLER
+          valueFrom:
+            configMapKeyRef:
+              name: runtime-config
+              key: FUNCTION_HANDLER
+        resources:
+          requests:
+            cpu: 100m
+            memory: 300Mi
+        volumeMounts:
+        - name: pyfile
+          mountPath: "/app/handler.py"
+          subPath: pyfile
       volumes:
       - name: pyfile
         configMap:
