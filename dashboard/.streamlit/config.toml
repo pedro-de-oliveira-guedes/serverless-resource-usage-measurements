@@ -2,3 +2,4 @@
 port=52055
 enableCORS=false
 headless=true
+fileWatcherType = "none"
