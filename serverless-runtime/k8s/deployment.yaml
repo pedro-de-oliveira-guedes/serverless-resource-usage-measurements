@@ -17,6 +17,14 @@ spec:
       - name: serverless-runtime
         image: pedroufmg/serverless-runtime:latest
         imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 100m
+            memory: 300Mi
+        volumeMounts:
+        - name: serverless-function-zip
+          mountPath: /app/serverless_function.zip.b64
+          subPath: serverless_function.zip.b64
         env:
         - name: REDIS_HOST
           value: "192.168.121.187"
@@ -43,18 +51,10 @@ spec:
               name: runtime-config
               key: MAIN_FILE_NAME
         - name: FUNCTION_HANDLER
-        valueFrom:
-          configMapKeyRef:
-            name: runtime-config
-            key: FUNCTION_HANDLER
-        resources:
-          requests:
-            cpu: 100m
-            memory: 300Mi
-        volumeMounts:
-        - name: serverless-function-zip
-          mountPath: /app/serverless_function.zip.b64
-          subPath: serverless_function.zip.b64
+          valueFrom:
+            configMapKeyRef:
+              name: runtime-config
+              key: FUNCTION_HANDLER
       volumes:
       - name: serverless-function-zip
         configMap:
