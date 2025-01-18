@@ -37,25 +37,25 @@ spec:
             configMapKeyRef:
               name: runtime-config
               key: MONITORING_INTERVAL
-        - name: ZIP_FILE_PATH
+        - name: MAIN_FILE_NAME
           valueFrom:
             configMapKeyRef:
               name: runtime-config
-              key: ZIP_FILE_PATH
+              key: MAIN_FILE_NAME
         - name: FUNCTION_HANDLER
           valueFrom:
             configMapKeyRef:
               name: runtime-config
               key: FUNCTION_HANDLER
+        volumeMounts:
+        - name: serverless-function-zip
+          mountPath: /app/serverless_function.zip.b64
+          subPath: serverless_function.zip.b64
+      volumes:
+      - name: serverless-function-zip
+        configMap:
+          name: serverless-function-zip
         resources:
           requests:
             cpu: 100m
             memory: 300Mi
-        volumeMounts:
-        - name: pyfile
-          mountPath: "/app/handler.py"
-          subPath: pyfile
-      volumes:
-      - name: pyfile
-        configMap:
-          name: pyfile
