@@ -43,10 +43,14 @@ spec:
               name: runtime-config
               key: MAIN_FILE_NAME
         - name: FUNCTION_HANDLER
-          valueFrom:
-            configMapKeyRef:
-              name: runtime-config
-              key: FUNCTION_HANDLER
+        valueFrom:
+          configMapKeyRef:
+            name: runtime-config
+            key: FUNCTION_HANDLER
+        resources:
+          requests:
+            cpu: 100m
+            memory: 300Mi
         volumeMounts:
         - name: serverless-function-zip
           mountPath: /app/serverless_function.zip.b64
@@ -55,7 +59,3 @@ spec:
       - name: serverless-function-zip
         configMap:
           name: serverless-function-zip
-        resources:
-          requests:
-            cpu: 100m
-            memory: 300Mi
