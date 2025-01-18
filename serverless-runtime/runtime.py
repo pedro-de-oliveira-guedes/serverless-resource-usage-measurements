@@ -28,8 +28,8 @@ redis_client = redis.Redis(
 )
 
 # Load user function
-def load_user_function():
-    spec = importlib.util.spec_from_file_location("user_module", f"/app/serverless_function/{MAIN_FILE_NAME}.py")
+def load_user_function(main_file_path: str):
+    spec = importlib.util.spec_from_file_location("user_module", main_file_path)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return getattr(module, FUNCTION_HANDLER)
@@ -69,11 +69,18 @@ def monitor(handler: callable, context: Context):
 
         time.sleep(MONITORING_INTERVAL)
 
+main_file_path = f"/app/serverless_function/{MAIN_FILE_NAME}.py"
 try:
-    handler = load_user_function()
+    handler = load_user_function(main_file_path=main_file_path)
 except Exception as e:
     raise Exception(f"Error loading user function: {e}")
 
-context = Context(host=REDIS_HOST, port=REDIS_PORT, input_key=REDIS_INPUT_KEY, output_key=REDIS_OUTPUT_KEY)
+context = Context(
+    host=REDIS_HOST,
+    port=REDIS_PORT,
+    input_key=REDIS_INPUT_KEY,
+    output_key=REDIS_OUTPUT_KEY,
+    main_file_path=main_file_path,
+)
 
 monitor(handler=handler, context=context)
