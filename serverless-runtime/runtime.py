@@ -4,7 +4,6 @@ import importlib.util
 import os
 import redis
 import time
-from zipfile import ZipFile
 
 # Load environment variables
 REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
@@ -12,7 +11,7 @@ REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))
 REDIS_INPUT_KEY = os.getenv("REDIS_INPUT_KEY", None)
 REDIS_OUTPUT_KEY = os.getenv("REDIS_OUTPUT_KEY", None)
 MONITORING_INTERVAL = int(os.getenv("MONITORING_INTERVAL", 5))
-ZIP_FILE_PATH = os.getenv("ZIP_FILE_PATH", "")
+MAIN_FILE_NAME = os.getenv("MAIN_FILE_NAME", "resource_usage")
 FUNCTION_HANDLER = os.getenv("FUNCTION_HANDLER", "handler")
 
 # Checking if crucial environment variables are set
@@ -30,13 +29,7 @@ redis_client = redis.Redis(
 
 # Load user function
 def load_user_function():
-    if ZIP_FILE_PATH:
-        with ZipFile(ZIP_FILE_PATH, 'r') as zip_ref:
-            zip_ref.extractall("/tmp/user_code")
-        spec = importlib.util.spec_from_file_location("user_module", "/tmp/user_code/handler.py")
-    else:
-        spec = importlib.util.spec_from_file_location("user_module", "/app/handler.py")
-    
+    spec = importlib.util.spec_from_file_location("user_module", f"/app/serverless_function/{MAIN_FILE_NAME}.py")
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return getattr(module, FUNCTION_HANDLER)
@@ -75,7 +68,6 @@ def monitor(handler: callable, context: Context):
             continue
 
         time.sleep(MONITORING_INTERVAL)
-
 
 try:
     handler = load_user_function()
