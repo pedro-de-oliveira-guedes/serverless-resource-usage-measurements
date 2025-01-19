@@ -1,8 +1,6 @@
 apiVersion: v1
 data:
   pyfile: |+
-    import json
-
     def handler(input: dict, context: object) -> dict[str, any]:
         # Load environment state
         env = context.env
@@ -10,8 +8,8 @@ data:
             env["cpu_utilizations"] = {}
 
         # Compute percent-network-egress
-        bytes_sent = input["net_io_counters_eth0-bytes_sent1"]
-        bytes_recv = input["net_io_counters_eth0-bytes_recv1"]
+        bytes_sent = input["net_io_counters_eth0-bytes_sent"]
+        bytes_recv = input["net_io_counters_eth0-bytes_recv"]
         percent_network_egress = (bytes_sent / (bytes_sent + bytes_recv)) * 100 if bytes_sent + bytes_recv > 0 else 0
 
         # Compute percent-memory-cached
@@ -46,8 +44,8 @@ data:
 
 kind: ConfigMap
 metadata:
-  creationTimestamp: "2025-01-17T23:02:41Z"
+  creationTimestamp: "2025-01-19T03:55:21Z"
   name: pyfile
   namespace: pedroguedes
-  resourceVersion: "1348804"
-  uid: ee73c2b7-2e96-4248-9a28-3dac88e3cb13
+  resourceVersion: "1811334"
+  uid: 4c11e9f0-09be-426d-88a1-e5c1ccb0aae2
