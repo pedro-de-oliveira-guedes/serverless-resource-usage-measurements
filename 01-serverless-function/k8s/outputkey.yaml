@@ -1,0 +1,10 @@
+apiVersion: v1
+data:
+  REDIS_OUTPUT_KEY: pedroguedes-proj3-output
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2025-01-19T03:58:20Z"
+  name: outputkey
+  namespace: pedroguedes
+  resourceVersion: "1812119"
+  uid: af2a4be9-1cba-4a19-9e41-70d70e8e2b22
